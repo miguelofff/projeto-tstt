@@ -1,0 +1,253 @@
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- LOGO -->
+    <div class="brand">
+      <img
+        class="brand-logo"
+        src="/assets/logo03.png"
+        alt="Logo"
+      >
+    </div>
+
+
+    <!-- MENU -->
+    <nav>
+      <ul>
+
+        <li>
+          <a
+            routerLink="/sistema"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            Visão Geral
+          </a>
+        </li>
+
+        <li>
+          <a
+            routerLink="/sistema/treinamentos"
+            routerLinkActive="active"
+          >
+            Treinamentos
+          </a>
+        </li>
+
+        <li>
+          <a
+            routerLink="/sistema/epis"
+            routerLinkActive="active"
+          >
+            Controle de EPIs
+          </a>
+        </li>
+
+        <li>
+          <a
+            routerLink="/sistema/riscos"
+            routerLinkActive="active"
+          >
+            Gestão de Riscos
+          </a>
+        </li>
+
+        <li>
+          <a
+            routerLink="/sistema/checklist"
+            routerLinkActive="active"
+          >
+            Checklist de Segurança
+          </a>
+        </li>
+
+        <li>
+          <a
+            routerLink="/sistema/relatorios"
+            routerLinkActive="active"
+          >
+            Relatórios
+          </a>
+        </li>
+
+
+        <!-- MENU DE USUÁRIOS — SOMENTE ADMIN -->
+        @if (authService.isAdmin()) {
+
+          <li>
+            <a
+              routerLink="/sistema/usuarios"
+              routerLinkActive="active"
+            >
+              Usuários
+            </a>
+          </li>
+
+        }
+
+      </ul>
+    </nav>
+
+
+    <!-- PERFIL NO FINAL DA SIDEBAR -->
+    <div class="sidebar-footer">
+
+      <div class="profile-container">
+
+        <!-- BOTÃO DO PERFIL -->
+        <button
+          type="button"
+          class="profile-area"
+          (click)="menuPerfilAberto = !menuPerfilAberto"
+        >
+
+          <img
+            class="profile-avatar"
+            src="assets/usericon.png"
+            alt="Usuário"
+          >
+
+          <div class="profile-text">
+
+            <strong>
+              {{ authService.getUsuarioLogado()?.nome || 'Usuário' }}
+            </strong>
+
+            <span>
+              {{ authService.isAdmin() ? 'Administrador' : 'Colaborador' }}
+            </span>
+
+          </div>
+
+          <span class="profile-dots">
+            •••
+          </span>
+
+        </button>
+
+
+        <!-- MENU DO PERFIL -->
+        @if (menuPerfilAberto) {
+
+          <div class="profile-menu">
+
+            <!-- USUÁRIO -->
+            <div class="profile-menu-user">
+
+              <div class="profile-menu-avatar">
+                <img
+                  src="assets/usericon.png"
+                  alt="Usuário"
+                >
+              </div>
+
+              <div class="profile-menu-user-info">
+
+                <strong>
+                  {{ authService.getUsuarioLogado()?.nome || 'Usuário' }}
+                </strong>
+
+                <span>
+                  {{ authService.isAdmin() ? 'Administrador' : 'Colaborador' }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- DIVISÓRIA -->
+            <div class="profile-menu-divider"></div>
+
+
+            <!-- MEU PERFIL -->
+            <a
+              routerLink="/sistema/perfil"
+              (click)="fecharMenuPerfil()"
+              class="profile-menu-item"
+            >
+
+              <span class="profile-menu-icon">
+                👤
+              </span>
+
+              <span>
+                Meu perfil
+              </span>
+
+            </a>
+
+
+            <!-- AJUDA -->
+            <a
+              href="#"
+              (click)="fecharMenuPerfil()"
+              class="profile-menu-item"
+            >
+
+              <span class="profile-menu-icon">
+                ?
+              </span>
+
+              <span>
+                Ajuda
+              </span>
+
+              <span class="profile-menu-item-arrow">
+                ›
+              </span>
+
+            </a>
+
+
+            <!-- DIVISÓRIA -->
+            <div class="profile-menu-divider"></div>
+
+
+            <!-- SAIR -->
+            <button
+              type="button"
+              class="profile-menu-item profile-menu-logout"
+              (click)="logout()"
+            >
+
+              <span class="profile-menu-icon">
+                ⇥
+              </span>
+
+              <span>
+                Sair
+              </span>
+
+            </button>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- ÁREA PRINCIPAL -->
+  <div class="main-area">
+
+    <!-- TOPBAR -->
+    <app-topbar></app-topbar>
+
+
+    <!-- CONTEÚDO DAS PÁGINAS -->
+    <main class="conteudo">
+
+      <router-outlet></router-outlet>
+
+    </main>
+
+  </div>
+
+</div>

@@ -1,0 +1,504 @@
+<!-- <section class="settings-page">
+  <header class="page-header">
+    <section>
+      <span class="page-kicker">Administração</span>
+
+      <h1>Configurações</h1>
+
+      <p>
+        Gerencie usuários, perfis, permissões e preferências do sistema.
+      </p>
+    </section>
+
+    <button
+      type="button"
+      class="btn btn-primary new-user-button"
+    >
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      Novo usuário
+    </button>
+  </header>
+
+  @if (mensagemSucesso) {
+    <aside class="alert alert-success settings-alert" role="status">
+      <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+      <span>{{ mensagemSucesso }}</span>
+    </aside>
+  }
+
+  <nav class="settings-tabs" aria-label="Seções das configurações">
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="abaAtiva === 'usuarios'"
+      (click)="alterarAba('usuarios')"
+    >
+      <i class="bi bi-people" aria-hidden="true"></i>
+      Usuários
+    </button>
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="abaAtiva === 'perfis'"
+      (click)="alterarAba('perfis')"
+    >
+      <i class="bi bi-person-badge" aria-hidden="true"></i>
+      Perfis
+    </button>
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="abaAtiva === 'permissoes'"
+      (click)="alterarAba('permissoes')"
+    >
+      <i class="bi bi-shield-lock" aria-hidden="true"></i>
+      Permissões
+    </button>
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="abaAtiva === 'preferencias'"
+      (click)="alterarAba('preferencias')"
+    >
+      <i class="bi bi-sliders" aria-hidden="true"></i>
+      Preferências
+    </button>
+  </nav>
+
+  @if (abaAtiva === 'usuarios') {
+    <article class="settings-card">
+      <header class="card-header">
+        <section>
+          <h2>Usuários do sistema</h2>
+          <p>Gerencie os acessos e os perfis dos usuários.</p>
+        </section>
+
+        <form class="search-control" role="search">
+          <label for="buscar-usuario" class="visually-hidden">
+            Buscar usuário
+          </label>
+
+          <i class="bi bi-search" aria-hidden="true"></i>
+
+          <input
+            id="buscar-usuario"
+            name="buscarUsuario"
+            type="search"
+            placeholder="Buscar usuário..."
+            [(ngModel)]="termoBusca"
+          />
+        </form>
+      </header>
+
+      <section class="table-responsive">
+        <table class="table settings-table">
+          <thead>
+            <tr>
+              <th scope="col">Usuário</th>
+              <th scope="col">Perfil</th>
+              <th scope="col">Status</th>
+              <th scope="col" class="text-end">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (usuario of usuariosFiltrados(); track usuario.id) {
+              <tr>
+                <td>
+                  <section class="user-cell">
+                    <span class="user-avatar" aria-hidden="true">
+                      {{ usuario.nome.charAt(0) }}
+                    </span>
+
+                    <span>
+                      <strong>{{ usuario.nome }}</strong>
+                      <small>{{ usuario.email }}</small>
+                    </span>
+                  </section>
+                </td>
+
+                <td>
+                  <span
+                    class="profile-badge"
+                    [class.admin-profile]="usuario.perfil === 'Administrador'"
+                    [class.rh-profile]="usuario.perfil === 'RH'"
+                    [class.safety-profile]="
+                      usuario.perfil === 'Técnico de Segurança'
+                    "
+                  >
+                    {{ usuario.perfil }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="status-badge"
+                    [class.active-status]="usuario.ativo"
+                    [class.inactive-status]="!usuario.ativo"
+                  >
+                    {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
+                  </span>
+                </td>
+
+                <td class="text-end">
+                  <button
+                    type="button"
+                    class="action-button"
+                    aria-label="Visualizar usuário"
+                    title="Visualizar"
+                  >
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="action-button"
+                    aria-label="Editar usuário"
+                    title="Editar"
+                  >
+                    <i class="bi bi-pencil" aria-hidden="true"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="action-button"
+                    aria-label="Redefinir senha"
+                    title="Redefinir senha"
+                  >
+                    <i class="bi bi-key" aria-hidden="true"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="status-button"
+                    [attr.aria-label]="
+                      usuario.ativo
+                        ? 'Inativar usuário'
+                        : 'Ativar usuário'
+                    "
+                    [title]="usuario.ativo ? 'Inativar' : 'Ativar'"
+                    (click)="alternarStatus(usuario)"
+                  >
+                    <i
+                      class="bi"
+                      [class.bi-person-dash]="usuario.ativo"
+                      [class.bi-person-check]="!usuario.ativo"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4">
+                  <section class="empty-state">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                    <strong>Nenhum usuário encontrado.</strong>
+                    <span>Tente buscar usando outro nome ou perfil.</span>
+                  </section>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+    </article>
+  }
+
+  @if (abaAtiva === 'perfis') {
+    <section class="profile-grid">
+      @for (perfil of perfis; track perfil.nome) {
+        <article class="profile-option">
+          <span class="option-icon">
+            @if (perfil.nome === 'Administrador') {
+              <i class="bi bi-shield-check" aria-hidden="true"></i>
+            } @else if (perfil.nome === 'RH') {
+              <i class="bi bi-people" aria-hidden="true"></i>
+            } @else {
+              <i class="bi bi-cone-striped" aria-hidden="true"></i>
+            }
+          </span>
+
+          <header>
+            <h2>{{ perfil.nome }}</h2>
+            <p>{{ perfil.descricao }}</p>
+          </header>
+
+          <section
+            class="profile-permissions"
+            aria-label="Permissões do perfil"
+          >
+            <span class="permission-count">
+              {{ perfil.permissoes.length }} permissões
+            </span>
+
+            <ul>
+              @for (permissao of perfil.permissoes; track permissao) {
+                <li>
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                  {{ permissao }}
+                </li>
+              }
+            </ul>
+          </section>
+
+          <button
+            type="button"
+            class="btn btn-outline-primary manage-permissions-button"
+            (click)="abrirPermissoes(perfil.nome)"
+          >
+            <i class="bi bi-shield-lock" aria-hidden="true"></i>
+            Gerenciar permissões
+          </button>
+        </article>
+      }
+    </section>
+  }
+
+  @if (abaAtiva === 'permissoes') {
+    <article class="settings-card">
+      <header class="card-header permissions-header">
+        <section>
+          <h2>Permissões por perfil</h2>
+
+          <p>
+            Determine quais áreas cada perfil poderá visualizar ou editar.
+          </p>
+        </section>
+
+        <section class="profile-select-control">
+          <label for="perfil-permissao" class="form-label">
+            Perfil selecionado
+          </label>
+
+          <select
+            id="perfil-permissao"
+            name="perfilPermissao"
+            class="form-select"
+            [(ngModel)]="perfilSelecionado"
+          >
+            @for (perfil of perfis; track perfil.nome) {
+              <option [value]="perfil.nome">
+                {{ perfil.nome }}
+              </option>
+            }
+          </select>
+        </section>
+      </header>
+
+      <section class="selected-profile-summary">
+        <span class="selected-profile-icon">
+          <i class="bi bi-person-badge" aria-hidden="true"></i>
+        </span>
+
+        <section>
+          <strong>{{ perfilSelecionado }}</strong>
+          <span>
+            {{ perfilAtual()?.descricao }}
+          </span>
+        </section>
+      </section>
+
+      <section class="permission-list">
+        <article class="permission-item">
+          <section>
+            <strong>Dashboard</strong>
+            <span>Visualizar indicadores e movimentações.</span>
+          </section>
+
+          <label class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="perfilPossuiPermissao('Dashboard')"
+              (change)="alternarPermissao('Dashboard')"
+              aria-label="Permitir acesso ao Dashboard"
+            />
+          </label>
+        </article>
+
+        <article class="permission-item">
+          <section>
+            <strong>Colaboradores</strong>
+            <span>Visualizar e gerenciar colaboradores.</span>
+          </section>
+
+          <label class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="perfilPossuiPermissao('Colaboradores')"
+              (change)="alternarPermissao('Colaboradores')"
+              aria-label="Permitir acesso aos colaboradores"
+            />
+          </label>
+        </article>
+
+        <article class="permission-item">
+          <section>
+            <strong>Gestão de EPIs</strong>
+            <span>Registrar entregas, devoluções e trocas.</span>
+          </section>
+
+          <label class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="perfilPossuiPermissao('Gestão de EPIs')"
+              (change)="alternarPermissao('Gestão de EPIs')"
+              aria-label="Permitir acesso à Gestão de EPIs"
+            />
+          </label>
+        </article>
+
+        <article class="permission-item">
+          <section>
+            <strong>Estoque</strong>
+            <span>
+              Visualizar quantidades, movimentações e alertas de estoque.
+            </span>
+          </section>
+
+          <label class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="perfilPossuiPermissao('Estoque')"
+              (change)="alternarPermissao('Estoque')"
+              aria-label="Permitir acesso ao Estoque"
+            />
+          </label>
+        </article>
+
+        <article class="permission-item">
+          <section>
+            <strong>Treinamentos</strong>
+            <span>
+              Visualizar e acompanhar treinamentos e participantes.
+            </span>
+          </section>
+
+          <label class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="perfilPossuiPermissao('Treinamentos')"
+              (change)="alternarPermissao('Treinamentos')"
+              aria-label="Permitir acesso aos Treinamentos"
+            />
+          </label>
+        </article>
+
+        <article class="permission-item">
+          <section>
+            <strong>Relatórios</strong>
+            <span>Visualizar e exportar relatórios do sistema.</span>
+          </section>
+
+          <label class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="perfilPossuiPermissao('Relatórios')"
+              (change)="alternarPermissao('Relatórios')"
+              aria-label="Permitir acesso aos Relatórios"
+            />
+          </label>
+        </article>
+
+        <article class="permission-item">
+          <section>
+            <strong>Configurações</strong>
+            <span>Gerenciar usuários, perfis e permissões.</span>
+          </section>
+
+          <label class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="perfilPossuiPermissao('Configurações')"
+              (change)="alternarPermissao('Configurações')"
+              aria-label="Permitir acesso às configurações"
+            />
+          </label>
+        </article>
+      </section>
+    </article>
+  }
+
+  @if (abaAtiva === 'preferencias') {
+    <article class="settings-card">
+      <header class="card-header">
+        <section>
+          <h2>Alertas e preferências</h2>
+          <p>Escolha quais alertas serão exibidos pelo sistema.</p>
+        </section>
+      </header>
+
+      <form (ngSubmit)="salvarPreferencias()">
+        <section class="preference-list">
+          <article class="preference-item">
+            <section>
+              <strong>Alerta de estoque baixo</strong>
+              <span>Avisar quando um EPI estiver abaixo do mínimo.</span>
+            </section>
+
+            <label class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="notificacaoEstoque"
+                [(ngModel)]="notificacaoEstoque"
+                aria-label="Ativar alerta de estoque baixo"
+              />
+            </label>
+          </article>
+
+          <article class="preference-item">
+            <section>
+              <strong>Alerta de validade</strong>
+              <span>Avisar sobre EPIs próximos ao vencimento.</span>
+            </section>
+
+            <label class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="notificacaoValidade"
+                [(ngModel)]="notificacaoValidade"
+                aria-label="Ativar alerta de validade"
+              />
+            </label>
+          </article>
+
+          <article class="preference-item">
+            <section>
+              <strong>Alerta de treinamento</strong>
+              <span>Avisar sobre treinamentos pendentes ou vencidos.</span>
+            </section>
+
+            <label class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="notificacaoTreinamento"
+                [(ngModel)]="notificacaoTreinamento"
+                aria-label="Ativar alerta de treinamento"
+              />
+            </label>
+          </article>
+        </section>
+
+        <footer class="card-actions">
+          <button type="submit" class="btn btn-primary save-button">
+            <i class="bi bi-check-lg" aria-hidden="true"></i>
+            Salvar
+          </button>
+        </footer>
+      </form>
+    </article>
+  }
+</section> -->

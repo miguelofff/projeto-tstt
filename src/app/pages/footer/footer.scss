@@ -1,0 +1,555 @@
+// ==========================================
+// CORES - IDENTIDADE CRISÂNTEMOS
+// ==========================================
+
+$azul-principal: #0d2a4d;
+$azul-escuro: #071d35;
+$azul-claro: #1e4f8c;
+
+$amarelo: #f2b705;
+$amarelo-hover: #ffc72c;
+
+$branco: #ffffff;
+$cinza-claro: #e6e9ed;
+$cinza: #b7c0c8;
+$cinza-escuro: #667383;
+
+
+// ==========================================
+// FOOTER
+// ==========================================
+
+.footer {
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+
+// ==========================================
+// ÁREA PRINCIPAL
+// ==========================================
+
+.footer-main {
+  background: $azul-principal;
+  color: $branco;
+  padding: 55px 0 45px;
+
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 4px;
+
+    background: $amarelo;
+  }
+}
+
+
+// ==========================================
+// LOGO
+// ==========================================
+
+.footer-brand {
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 25px;
+  }
+
+  .logo-symbol {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid $amarelo;
+    border-radius: 50%;
+
+    color: $amarelo;
+
+    font-size: 38px;
+    line-height: 1;
+  }
+
+  .logo-text {
+
+    display: flex;
+    flex-direction: column;
+
+    strong {
+      color: $branco;
+      font-size: 23px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    small {
+      color: $amarelo;
+
+      font-size: 10px;
+      font-weight: 600;
+
+      letter-spacing: 3px;
+
+      margin-top: 2px;
+    }
+  }
+}
+
+
+// ==========================================
+// DESCRIÇÃO
+// ==========================================
+
+.footer-description {
+  max-width: 330px;
+
+  color: $cinza-claro;
+
+  font-size: 14px;
+  line-height: 1.7;
+
+  margin-bottom: 20px;
+}
+
+
+// ==========================================
+// SLOGAN
+// ==========================================
+
+.footer-slogan {
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  color: $branco;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  margin: 0;
+
+  i {
+    color: $amarelo;
+    font-size: 18px;
+  }
+}
+
+
+// ==========================================
+// COLUNAS
+// ==========================================
+
+.footer-column {
+
+  h3 {
+    position: relative;
+
+    color: $branco;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    margin-bottom: 22px;
+    padding-bottom: 11px;
+
+    text-transform: uppercase;
+    letter-spacing: .5px;
+
+    &::after {
+      content: '';
+
+      position: absolute;
+
+      left: 0;
+      bottom: 0;
+
+      width: 35px;
+      height: 3px;
+
+      background: $amarelo;
+
+      border-radius: 5px;
+    }
+  }
+
+  ul {
+    list-style: none;
+
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 11px;
+
+      a {
+        display: flex;
+        align-items: center;
+
+        gap: 8px;
+
+        color: $cinza-claro;
+
+        text-decoration: none;
+
+        font-size: 13px;
+
+        transition: all .25s ease;
+
+        i {
+          color: $amarelo;
+          font-size: 14px;
+        }
+
+        &:hover {
+          color: $amarelo;
+          transform: translateX(4px);
+        }
+      }
+    }
+  }
+}
+
+
+// ==========================================
+// CONTATO
+// ==========================================
+
+.contact-item {
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 18px;
+
+  .contact-icon {
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(242, 183, 5, .12);
+
+    border: 1px solid rgba(242, 183, 5, .35);
+
+    border-radius: 8px;
+
+    color: $amarelo;
+
+    flex-shrink: 0;
+  }
+
+  span {
+    display: block;
+
+    color: $cinza;
+
+    font-size: 11px;
+
+    margin-bottom: 2px;
+  }
+
+  strong {
+    display: block;
+
+    color: $branco;
+
+    font-size: 12px;
+    font-weight: 500;
+  }
+}
+
+
+// ==========================================
+// REDES SOCIAIS
+// ==========================================
+
+.social-media {
+
+  display: flex;
+
+  gap: 9px;
+
+  margin-top: 20px;
+
+  a {
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, .25);
+
+    border-radius: 50%;
+
+    color: $branco;
+
+    text-decoration: none;
+
+    transition: all .25s ease;
+
+    &:hover {
+      background: $amarelo;
+
+      border-color: $amarelo;
+
+      color: $azul-principal;
+
+      transform: translateY(-3px);
+    }
+  }
+}
+
+
+// ==========================================
+// VALORES
+// ==========================================
+
+.footer-values {
+
+  background: $azul-escuro;
+
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+
+.values-wrapper {
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 65px;
+}
+
+
+.value-item {
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  color: $branco;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  padding: 0 25px;
+
+  border-right: 1px solid rgba(255, 255, 255, .18);
+
+  &:last-child {
+    border-right: none;
+  }
+
+  i {
+    color: $amarelo;
+
+    font-size: 20px;
+  }
+}
+
+
+// ==========================================
+// PARTE INFERIOR
+// ==========================================
+
+.footer-bottom {
+
+  background: #06182b;
+
+  padding: 18px 0;
+}
+
+
+.copyright {
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  color: $cinza;
+
+  font-size: 11px;
+}
+
+
+.legal-links {
+
+  display: flex;
+
+  gap: 20px;
+
+  a {
+
+    color: $cinza;
+
+    text-decoration: none;
+
+    transition: color .2s ease;
+
+    &:hover {
+      color: $amarelo;
+    }
+  }
+}
+
+
+// ==========================================
+// RESPONSIVIDADE
+// ==========================================
+
+@media (max-width: 991px) {
+
+  .footer-main {
+    padding: 45px 0 35px;
+  }
+
+  .values-wrapper {
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    padding: 15px 0;
+  }
+
+  .value-item {
+
+    margin: 8px 0;
+
+    padding: 0 18px;
+  }
+
+}
+
+
+@media (max-width: 767px) {
+
+  .footer-brand {
+    text-align: center;
+
+    .brand-logo {
+      justify-content: center;
+    }
+
+    .footer-description {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .footer-slogan {
+      justify-content: center;
+    }
+  }
+
+
+  .footer-column {
+    text-align: center;
+
+    h3 {
+
+      &::after {
+        left: 50%;
+
+        transform: translateX(-50%);
+      }
+    }
+
+    ul {
+
+      li {
+
+        a {
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+
+  .contact-item {
+    justify-content: center;
+  }
+
+
+  .social-media {
+    justify-content: center;
+  }
+
+
+  .value-item {
+
+    width: 50%;
+
+    justify-content: center;
+
+    border-right: none;
+
+    text-align: center;
+  }
+
+
+  .copyright {
+
+    flex-direction: column;
+
+    text-align: center;
+  }
+
+
+  .legal-links {
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .value-item {
+
+    width: 100%;
+  }
+
+  .brand-logo {
+
+    .logo-text {
+
+      strong {
+        font-size: 19px;
+      }
+
+      small {
+        font-size: 8px;
+      }
+    }
+  }
+
+}

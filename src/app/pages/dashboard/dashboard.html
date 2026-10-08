@@ -1,0 +1,139 @@
+<div class="dashboard-header">
+  <div>
+    <h2>Dashboard</h2>
+    <p>Visão geral dos principais indicadores de treinamento, EPIs e riscos.</p>
+  </div>
+</div>
+
+<div class="overview-cards">
+  <article class="overview-card" [class.search-highlight]="isCardActive('treinamentos-vencidos')">
+    <span>Treinamentos Vencidos</span>
+    <strong>3</strong>
+  </article>
+  <article class="overview-card" [class.search-highlight]="isCardActive('epis-proximos')">
+    <span>EPIs Próximos do Vencimento</span>
+    <strong>7</strong>
+  </article>
+  <article class="overview-card" [class.search-highlight]="isCardActive('funcionarios')">
+    <span>Funcionários Treinados</span>
+    <strong>120</strong>
+  </article>
+  <article class="overview-card" [class.search-highlight]="isCardActive('riscos')">
+    <span>Riscos Críticos</span>
+    <strong>2</strong>
+  </article>
+</div>
+
+<section class="objectives-grid">
+  <article class="objective-card">
+    <div class="objective-header">
+      <div>
+        <small>Treinamento</small>
+        <h3>Treinamentos Vencidos</h3>
+      </div>
+      <span class="objective-pill">Alerta</span>
+    </div>
+
+    <div class="kr-list">
+      <div class="kr-item">
+        <div class="kr-title">
+          <span>Treinamentos com validade expirada</span>
+          <strong>39%</strong>
+        </div>
+        <div class="progress-bar"><div style="width: 39%"></div></div>
+      </div>
+    </div>
+
+    <div class="objective-footer">
+      <div class="donut-chart">
+        <div class="donut-fill" style="--percent: 39"></div>
+        <strong>39%</strong>
+      </div>
+      <p>Porcentagem de treinamentos vencidos</p>
+    </div>
+  </article>
+
+  <article class="objective-card secondary">
+    <div class="objective-header">
+      <div>
+        <small>EPIs</small>
+        <h3>EPIs Próximos do Vencimento</h3>
+      </div>
+      <span class="objective-pill">Alerta</span>
+    </div>
+
+    <div class="kr-list">
+      <div class="kr-item">
+        <div class="kr-title">
+          <span>Itens com vencimento próximo</span>
+          <strong>26%</strong>
+        </div>
+        <div class="progress-bar"><div style="width: 26%"></div></div>
+      </div>
+    </div>
+
+    <div class="objective-footer">
+      <div class="donut-chart">
+        <div class="donut-fill" style="--percent: 26"></div>
+        <strong>26%</strong>
+      </div>
+      <p>Porcentagem de EPIs quase vencendo</p>
+    </div>
+  </article>
+
+  <article class="objective-card">
+    <div class="objective-header">
+      <div>
+        <small>Treinamentos</small>
+        <h3>Funcionários Treinados</h3>
+      </div>
+      <span class="objective-pill">Progresso</span>
+    </div>
+
+    <div class="kr-list">
+      <div class="kr-item">
+        <div class="kr-title">
+          <span>Equipe com treinamentos completos</span>
+          <strong>90%</strong>
+        </div>
+        <div class="progress-bar"><div style="width: 90%"></div></div>
+      </div>
+    </div>
+
+    <div class="objective-footer">
+      <div class="donut-chart">
+        <div class="donut-fill" style="--percent: 90"></div>
+        <strong>90%</strong>
+      </div>
+      <p>Porcentagem de funcionários treinados</p>
+    </div>
+  </article>
+
+  <article class="objective-card secondary">
+    <div class="objective-header">
+      <div>
+        <small>Riscos</small>
+        <h3>Riscos Críticos</h3>
+      </div>
+      <span class="objective-pill">Atenção</span>
+    </div>
+
+    <div class="kr-list">
+      <div class="kr-item">
+        <div class="kr-title">
+          <span>Riscos críticos identificados</span>
+          <strong>58%</strong>
+        </div>
+        <div class="progress-bar"><div style="width: 58%"></div></div>
+      </div>
+    </div>
+
+    <div class="objective-footer">
+      <div class="donut-chart">
+        <div class="donut-fill" style="--percent: 58"></div>
+        <strong>58%</strong>
+      </div>
+      <p>Progresso dos riscos críticos</p>
+    </div>
+  </article>
+</section>

@@ -1,0 +1,227 @@
+<div class="relatorios-page">
+  <header class="report-header">
+    <div>
+      <h2>Relatórios</h2>
+      <p>Visão geral dos indicadores de Segurança e Saúde do Trabalho</p>
+    </div>
+    <button class="date-button">Junho de 2026</button>
+  </header>
+
+   <!-- ÁREA DE EXPORTAÇÃO -->
+  <div class="export-card">
+
+    <div class="export-header">
+
+      <div class="export-icon">
+        <i class="bi bi-file-earmark-arrow-down"></i>
+      </div>
+
+      <div>
+        <h3>Exportar Relatório</h3>
+
+        <p>
+          Selecione o relatório que deseja gerar e escolha o formato.
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="export-content">
+
+      <!-- SELECT -->
+      <div class="form-group">
+
+        <label for="tipoRelatorio">
+          Relatório
+        </label>
+
+        <select
+          id="tipoRelatorio"
+          class="form-select"
+          [(ngModel)]="relatorioSelecionado">
+
+          <option value="">
+            Selecione um relatório
+          </option>
+
+          <option value="geral">
+            Relatório Geral
+          </option>
+
+          <option value="funcionarios">
+            Funcionários
+          </option>
+
+          <option value="treinamentos">
+            Treinamentos
+          </option>
+
+          <option value="epis">
+            Equipamentos de Proteção Individual (EPIs)
+          </option>
+
+          <option value="riscos">
+            Riscos Ocupacionais
+          </option>
+
+          <option value="inspecoes">
+            Inspeções de Segurança
+          </option>
+
+          <option value="checklist">
+            Checklist de Segurança
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- BOTÕES -->
+      <div class="export-buttons">
+
+        <button
+          type="button"
+          class="btn-export pdf"
+          [disabled]="!relatorioSelecionado"
+          (click)="exportarPDF()">
+
+          <i class="bi bi-file-earmark-pdf"></i>
+
+          <span>
+            Exportar PDF
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn-export excel"
+          [disabled]="!relatorioSelecionado"
+          (click)="exportarExcel()">
+
+          <i class="bi bi-file-earmark-spreadsheet"></i>
+
+          <span>
+            Exportar Excel
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="summary-grid">
+    <article class="summary-card summary-blue">
+      <div class="summary-icon">👥</div>
+      <div>
+        <strong>120</strong>
+        <span>Funcionários</span>
+      </div>
+      <p>Total de colaboradores</p>
+    </article>
+
+    <article class="summary-card summary-green">
+      <div class="summary-icon">🎓</div>
+      <div>
+        <strong>18</strong>
+        <span>Treinamentos</span>
+      </div>
+      <p>Realizados no período</p>
+    </article>
+
+    <article class="summary-card summary-orange">
+      <div class="summary-icon">🛡️</div>
+      <div>
+        <strong>235</strong>
+        <span>EPIs Entregues</span>
+      </div>
+      <p>Total de EPIs</p>
+    </article>
+
+    <article class="summary-card summary-red">
+      <div class="summary-icon">⚠️</div>
+      <div>
+        <strong>12</strong>
+        <span>Riscos Ativos</span>
+      </div>
+      <p>Riscos identificados</p>
+    </article>
+  </div>
+
+  <div class="report-grid">
+    <section class="report-card">
+      <div class="card-header">
+        <h3>Treinamentos por Tipo</h3>
+      </div>
+      <div class="bar-chart">
+        <div class="bar-row"><span>Direção Defensiva</span><div class="bar" style="--value: 45"></div><strong>45</strong></div>
+        <div class="bar-row"><span>Uso de EPIs</span><div class="bar" style="--value: 32"></div><strong>32</strong></div>
+        <div class="bar-row"><span>Combate a Incêndio</span><div class="bar" style="--value: 28"></div><strong>28</strong></div>
+        <div class="bar-row"><span>Primeiros Socorros</span><div class="bar" style="--value: 25"></div><strong>25</strong></div>
+        <div class="bar-row"><span>NR-12</span><div class="bar" style="--value: 18"></div><strong>18</strong></div>
+      </div>
+    </section>
+
+    <section class="report-card">
+      <div class="card-header">
+        <h3>Distribuição dos EPIs</h3>
+      </div>
+      <div class="pie-chart-card">
+        <div class="pie-chart">
+          <div class="slice slice-blue"></div>
+          <div class="slice slice-green"></div>
+          <div class="slice slice-orange"></div>
+          <div class="slice slice-purple"></div>
+          <div class="slice slice-teal"></div>
+          <div class="pie-center">100%</div>
+        </div>
+        <div class="pie-legend">
+          <div><span class="legend-dot blue"></span>Botina <strong>28%</strong></div>
+          <div><span class="legend-dot green"></span>Colete Refletivo <strong>22%</strong></div>
+          <div><span class="legend-dot orange"></span>Luvas <strong>20%</strong></div>
+          <div><span class="legend-dot purple"></span>Óculos <strong>16%</strong></div>
+          <div><span class="legend-dot teal"></span>Protetor Auricular <strong>14%</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="report-card">
+      <div class="card-header">
+        <h3>Riscos por Nível</h3>
+      </div>
+      <div class="risk-chart">
+        <div class="risk-row"><span>Alto</span><div class="risk-bar" style="--width: 40"></div><strong>4</strong></div>
+        <div class="risk-row"><span>Médio</span><div class="risk-bar" style="--width: 70"></div><strong>7</strong></div>
+        <div class="risk-row"><span>Baixo</span><div class="risk-bar" style="--width: 30"></div><strong>3</strong></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="report-card report-card--wide">
+    <div class="card-header">
+      <h3>Treinamentos Realizados por Mês</h3>
+    </div>
+    <div class="line-chart">
+      <div class="line-axis">
+        <span>20</span><span>15</span><span>10</span><span>5</span>
+      </div>
+      <div class="chart-line">
+        <div class="point" style="--left: 10%; --bottom: 20%"></div>
+        <div class="point" style="--left: 30%; --bottom: 35%"></div>
+        <div class="point" style="--left: 45%; --bottom: 55%"></div>
+        <div class="point" style="--left: 60%; --bottom: 45%"></div>
+        <div class="point" style="--left: 75%; --bottom: 65%"></div>
+        <div class="point" style="--left: 90%; --bottom: 72%"></div>
+      </div>
+      <div class="chart-labels">
+        <span>Jan</span><span>Fev</span><span>Mar</span><span>Abr</span><span>Mai</span><span>Jun</span>
+      </div>
+    </div>
+  </section>
+</div>

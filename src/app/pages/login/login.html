@@ -1,0 +1,268 @@
+﻿<div class="login-page">
+
+  <div class="login-overlay"></div>
+
+  @if (!recuperandoSenha) {
+
+    <div class="login-card">
+
+      <div class="login-logo">
+        <img src="/assets/logo.png" alt="Logo Crisântemos">
+      </div>
+
+      <div class="login-header">
+        <h1>Acesse sua conta</h1>
+        <p>Digite seu nome e senha para acessar a plataforma</p>
+      </div>
+
+      <form (ngSubmit)="fazerLogin()">
+
+        <div class="form-group">
+          <label for="usuario">Usuário</label>
+
+          <input
+            id="usuario"
+            type="text"
+            name="usuario"
+            [(ngModel)]="usuario"
+            placeholder="Digite seu usuário"
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="senha">Senha</label>
+
+          <input
+            id="senha"
+            type="password"
+            name="senha"
+            [(ngModel)]="senha"
+            placeholder="Digite sua senha"
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn-login"
+        >
+          Entrar
+        </button>
+
+      </form>
+
+  
+      <button
+        type="button"
+        class="btn-recuperar"
+        (click)="abrirRecuperacao()"
+      >
+        <span class="cadeado">🔐</span>
+        Esqueci minha senha
+      </button>
+
+      <div class="login-footer">
+        Ao continuar, você concorda com os Termos de Serviço
+        e Política de Privacidade.
+      </div>
+
+    </div>
+
+  }
+
+
+
+
+  @if (recuperandoSenha) {
+
+    <div class="login-card recuperacao-card">
+
+      @if (etapaRecuperacao === 1) {
+
+        <div class="login-logo">
+          <img src="/assets/logo.png" alt="Logo Crisântemos">
+        </div>
+
+        <div class="login-header">
+          <h1>Recuperar senha</h1>
+          <p>Informe seu usuário para continuar</p>
+        </div>
+
+        <div class="form-group">
+          <label for="usuarioRecuperacao">
+            Usuário
+          </label>
+
+          <input
+            id="usuarioRecuperacao"
+            type="text"
+            name="usuarioRecuperacao"
+            [(ngModel)]="usuarioRecuperacao"
+            placeholder="Digite seu usuário"
+          />
+        </div>
+
+        <button
+          type="button"
+          class="btn-login"
+          (click)="verificarUsuario()"
+        >
+          Continuar
+        </button>
+
+        <button
+          type="button"
+          class="btn-voltar"
+          (click)="voltarLogin()"
+        >
+          ← Voltar para o login
+        </button>
+
+      }
+
+
+      @if (etapaRecuperacao === 2) {
+
+        <div class="login-logo">
+          <img src="/assets/logo.png" alt="Logo Crisântemos">
+        </div>
+
+        <div class="login-header">
+          <h1>Verificação</h1>
+          <p>Responda à pergunta de segurança</p>
+        </div>
+
+        <div class="pergunta">
+          {{ perguntaSeguranca }}
+        </div>
+
+        <div class="form-group">
+          <label for="respostaRecuperacao">
+            Resposta
+          </label>
+
+          <input
+            id="respostaRecuperacao"
+            type="text"
+            name="respostaRecuperacao"
+            [(ngModel)]="respostaRecuperacao"
+            placeholder="Digite sua resposta"
+          />
+        </div>
+
+        <button
+          type="button"
+          class="btn-login"
+          (click)="verificarResposta()"
+        >
+          Verificar resposta
+        </button>
+
+        <button
+          type="button"
+          class="btn-voltar"
+          (click)="voltarLogin()"
+        >
+          ← Cancelar
+        </button>
+
+      }
+
+
+      @if (etapaRecuperacao === 3) {
+
+        <div class="login-logo">
+          <img src="/assets/logo.png" alt="Logo Crisântemos">
+        </div>
+
+        <div class="login-header">
+          <h1>Nova senha</h1>
+          <p>Crie uma nova senha para sua conta</p>
+        </div>
+
+        <div class="form-group">
+          <label for="novaSenha">
+            Nova senha
+          </label>
+
+          <input
+            id="novaSenha"
+            type="password"
+            name="novaSenha"
+            [(ngModel)]="novaSenha"
+            placeholder="Digite a nova senha"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="confirmarSenha">
+            Confirmar senha
+          </label>
+
+          <input
+            id="confirmarSenha"
+            type="password"
+            name="confirmarSenha"
+            [(ngModel)]="confirmarSenha"
+            placeholder="Digite novamente a senha"
+          />
+        </div>
+
+        <button
+          type="button"
+          class="btn-login"
+          (click)="alterarSenha()"
+        >
+          Alterar senha
+        </button>
+
+        <button
+          type="button"
+          class="btn-voltar"
+          (click)="voltarLogin()"
+        >
+          ← Cancelar
+        </button>
+
+      }
+
+    </div>
+
+  }
+
+
+
+  @if (mostrarMensagem) {
+
+    <div class="modal-overlay">
+
+      <div class="modal-card">
+
+        <div class="modal-icon">
+          !
+        </div>
+
+        <h2>
+          {{ getTituloMensagem() }}
+        </h2>
+
+        <p>
+          {{ getTextoMensagem() }}
+        </p>
+
+        <button
+          type="button"
+          class="modal-button"
+          (click)="fecharMensagem()"
+        >
+          OK
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

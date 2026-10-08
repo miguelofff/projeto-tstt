@@ -1,0 +1,34 @@
+<aside class="sidebar">
+    <div class="brand">
+      <img class="brand-logo" src="/assets/logonovo.png" alt="Logo">
+    </div>
+
+    <nav>
+      <ul>
+        <li><a routerLink="/sistema" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a></li>
+        <li><a routerLink="/sistema/treinamentos" routerLinkActive="active">Treinamentos</a></li>
+        <li><a routerLink="/sistema/epis" routerLinkActive="active">Controle de EPIs</a></li>
+        <li><a routerLink="/sistema/riscos" routerLinkActive="active">Gestão de Riscos</a></li>
+        <li><a routerLink="/sistema/checklist" routerLinkActive="active">Checklist de Segurança</a></li>
+        <li><a routerLink="/sistema/relatorios" routerLinkActive="active">Relatórios</a></li>
+        <li><a routerLink="/sistema/usuarios" routerLinkActive="active">Usuários</a></li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="profile-area">
+        <div class="profile-avatar">
+          <img src="assets/usericon.png" alt="Usuário">
+        </div>
+
+        <div class="profile-text">
+          <span>Bem-vindo</span>
+          <strong>Administrador</strong>
+        </div>
+      </div>
+
+      <button class="config-button" aria-label="Configurações">
+        <i class="bi bi-gear"></i>
+      </button>
+    </div>
+  </aside>

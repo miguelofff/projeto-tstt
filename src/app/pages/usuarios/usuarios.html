@@ -1,0 +1,120 @@
+<div class="conteudo-pagina">
+  <h2>Usuários</h2>
+
+  <div class="acoes">
+    <input
+      type="text"
+      placeholder="Buscar usuário"
+      [(ngModel)]="termoBusca"
+      (keyup.enter)="buscarUsuario()"
+    />
+    <button type="button" (click)="buscarUsuario()">Buscar Usuário</button>
+  </div>
+
+  <section *ngIf="mensagem" class="mensagem-alerta">
+    {{ mensagem }}
+  </section>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Cargo</th>
+        <th>Perfil</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let usuario of usuariosFiltrados">
+        <td>{{ usuario.nome }}</td>
+        <td>{{ usuario.cargo }}</td>
+        <td>{{ usuario.perfil }}</td>
+        <td>{{ usuario.ativo ? 'Ativo' : 'Inativo' }}</td>
+        <td>
+          <button
+            type="button"
+            (click)="visualizarUsuario(usuario)"
+          >
+            Ver
+          </button>
+
+          <button
+            *ngIf="authService.isAdmin() || usuario.nome === authService.getUsuarioLogado()?.nome"
+            type="button"
+            (click)="editarUsuario(usuario)"
+          >
+            Editar
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="usuariosFiltrados.length === 0">
+        <td colspan="5">Nenhum usuário encontrado.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <section *ngIf="usuarioVisualizado" class="view-form">
+    <h3>Gestão de Riscos de {{ usuarioVisualizado.nome }}</h3>
+    <div class="detalhes-usuario">
+      <p><strong>Cargo:</strong> {{ usuarioVisualizado.cargo }}</p>
+      <p><strong>Perfil:</strong> {{ usuarioVisualizado.perfil }}</p>
+      <p><strong>Status do usuário:</strong> {{ usuarioVisualizado.ativo ? 'Ativo' : 'Inativo' }}</p>
+    </div>
+
+    <table class="riscos-table">
+      <thead>
+        <tr>
+          <th>Setor</th>
+          <th>Risco</th>
+          <th>Nível</th>
+          <th>Situação</th>
+          <th>Validade</th>
+          <th>Validado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let risco of usuarioVisualizado.riscos">
+          <td>{{ risco.setor }}</td>
+          <td>{{ risco.risco }}</td>
+          <td>{{ risco.nivel }}</td>
+          <td>{{ risco.situacao }}</td>
+          <td>{{ risco.validade }}</td>
+          <td>{{ risco.validadeValida ? 'Sim' : 'Não' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="button" class="close-view" (click)="usuarioVisualizado = null">Fechar</button>
+  </section>
+
+  <section *ngIf="usuarioSelecionado" class="edit-form">
+    <h3>Editar usuário</h3>
+    <div class="form-group">
+      <label>Nome</label>
+      <input type="text" [(ngModel)]="usuarioSelecionado.nome" />
+    </div>
+    <div class="form-group">
+      <label>Cargo</label>
+      <input type="text" [(ngModel)]="usuarioSelecionado.cargo" />
+    </div>
+    <div class="form-group">
+      <label>Perfil</label>
+      <input type="text" [(ngModel)]="usuarioSelecionado.perfil" />
+    </div>
+    <div class="form-group status-group">
+      <label>Status</label>
+      <select [(ngModel)]="usuarioSelecionado.ativo">
+        <option [ngValue]="true">Ativo</option>
+        <option [ngValue]="false">Inativo</option>
+      </select>
+    </div>
+
+    <div class="edit-actions">
+      <button type="button" (click)="salvarEdicao()">Salvar</button>
+      <button type="button" class="cancel-button" (click)="cancelarEdicao()">Cancelar</button>
+    </div>
+  </section>
+</div>
+

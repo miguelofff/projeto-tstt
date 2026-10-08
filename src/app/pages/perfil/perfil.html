@@ -1,0 +1,133 @@
+<div class="perfil-page">
+
+  <div class="perfil-card">
+
+    <div class="perfil-header">
+
+      <div class="avatar">
+        <img src="/assets/usericon.png" alt="Foto do usuário">
+      </div>
+
+      <div>
+        <h1>Meu perfil</h1>
+
+        <p>
+          Visualize e edite suas informações pessoais.
+        </p>
+      </div>
+
+    </div>
+
+
+    @if (usuario) {
+
+      <div class="perfil-form">
+
+        <div class="campo">
+
+          <label>Nome</label>
+
+          @if (!editando) {
+
+            <div class="valor">
+              {{ usuario.nome }}
+            </div>
+
+          } @else {
+
+            <input
+              type="text"
+              [(ngModel)]="usuario.nome"
+            />
+
+          }
+
+        </div>
+
+
+        <div class="campo">
+
+          <label>Cargo</label>
+
+          <div class="valor">
+            {{ usuario.cargo || 'Não informado' }}
+          </div>
+
+        </div>
+
+
+        <div class="campo">
+
+          <label>Perfil</label>
+
+          <div class="valor">
+
+            @if (usuario.role === 'admin') {
+              Administrador
+            } @else {
+              Colaborador
+            }
+
+          </div>
+
+        </div>
+
+
+        <div class="campo">
+
+          <label>Status</label>
+
+          <div class="valor">
+
+            @if (usuario.ativo !== false) {
+              Ativo
+            } @else {
+              Inativo
+            }
+
+          </div>
+
+        </div>
+
+
+        @if (editando) {
+
+          <div class="acoes">
+
+            <button
+              type="button"
+              class="btn-salvar"
+              (click)="salvarPerfil()"
+            >
+              Salvar alterações
+            </button>
+
+            <button
+              type="button"
+              class="btn-cancelar"
+              (click)="cancelarEdicao()"
+            >
+              Cancelar
+            </button>
+
+          </div>
+
+        } @else {
+
+          <button
+            type="button"
+            class="btn-editar"
+            (click)="editarPerfil()"
+          >
+            Editar perfil
+          </button>
+
+        }
+
+      </div>
+
+    }
+
+  </div>
+
+</div>

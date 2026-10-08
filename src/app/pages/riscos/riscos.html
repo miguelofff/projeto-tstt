@@ -1,0 +1,120 @@
+<div class="riscos-page">
+  <header class="riscos-header">
+    <div>
+      <h1>Gestão de Riscos</h1>
+      <p>Gerencie e acompanhe os riscos identificados nos setores.</p>
+    </div>
+    <button class="novo-risco" type="button">
+      <i class="bi bi-plus-lg"></i>
+      Novo Risco
+    </button>
+  </header>
+
+  <section class="riscos-summary">
+    <article>
+      <div class="summary-icon summary-warning">
+        <i class="bi bi-exclamation-triangle"></i>
+      </div>
+      <div>
+        <strong>Riscos Identificados</strong>
+        <span>{{ totalRiscos }}</span>
+        <p>Total de riscos cadastrados</p>
+      </div>
+    </article>
+
+    <article>
+      <div class="summary-icon summary-danger">
+        <i class="bi bi-shield-shaded"></i>
+      </div>
+      <div>
+        <strong>Riscos Altos</strong>
+        <span>{{ totalAltos }}</span>
+        <p>Requerem atenção</p>
+      </div>
+    </article>
+
+    <article>
+      <div class="summary-icon summary-medium">
+        <i class="bi bi-exclamation-circle"></i>
+      </div>
+      <div>
+        <strong>Riscos Médios</strong>
+        <span>{{ totalMedios }}</span>
+        <p>Monitoramento contínuo</p>
+      </div>
+    </article>
+
+    <article>
+      <div class="summary-icon summary-success">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <div>
+        <strong>Riscos Baixos</strong>
+        <span>{{ totalBaixos }}</span>
+        <p>Situação sob controle</p>
+      </div>
+    </article>
+  </section>
+
+  <section class="riscos-filter">
+    <div class="search-input">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        placeholder="Buscar por setor ou risco..."
+        [(ngModel)]="busca"
+      />
+    </div>
+
+    <div class="filter-controls">
+      <div class="filter-group">
+        <label>Nível de Risco</label>
+        <select [(ngModel)]="nivelFiltro">
+          <option *ngFor="let nivel of niveis" [value]="nivel">{{ nivel }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Situação</label>
+        <select [(ngModel)]="situacaoFiltro">
+          <option *ngFor="let situacao of situacoes" [value]="situacao">{{ situacao }}</option>
+        </select>
+      </div>
+      <div class="filter-actions">
+        <button type="button" class="btn-filter" (click)="filtrar()">Filtrar</button>
+        <button type="button" class="btn-clear" (click)="limpar()">Limpar</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="riscos-table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Setor</th>
+          <th>Risco</th>
+          <th>Nível</th>
+          <th>Situação</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let risco of riscosFiltrados">
+          <td>
+            <div class="setor-cell">
+              <span class="setor-icon"><i class="bi {{ risco.icone }}"></i></span>
+              {{ risco.setor }}
+            </div>
+          </td>
+          <td>{{ risco.risco }}</td>
+          <td><span class="tag nivel-{{ risco.nivel.toLowerCase() }}">{{ risco.nivel }}</span></td>
+          <td><span class="status {{ risco.situacao.toLowerCase() }}">{{ risco.situacao }}</span></td>
+          <td class="actions-cell">
+            <button class="action-btn view"><i class="bi bi-eye"></i></button>
+            <button class="action-btn edit"><i class="bi bi-pencil"></i></button>
+            <button class="action-btn more"><i class="bi bi-three-dots"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

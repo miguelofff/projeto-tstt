@@ -1,0 +1,37 @@
+:root {
+  --gold: #d4af37;
+  --gold-deep: #b8921d;
+  --charcoal: #0f1a1a;
+  --charcoal-soft: #1d2d2d;
+  --cream: #f5f0e6;
+  --cream-strong: #e7e0d4;
+  --text: #111111;
+  --muted: #5e5e5e;
+  --white: #ffffff;
+  --danger: #d92b2b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--cream);
+  color: var(--text);
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+}
+
+a, button, input {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

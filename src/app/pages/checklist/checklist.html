@@ -1,0 +1,139 @@
+<div class="checklist-page">
+  <div>
+        <h1>Checklist de Segurança</h1>
+        <p>Registre e acompanhe as inspeções de segurança do trabalho.</p>
+      </div>
+  <div class="checklist-header-card">
+    <div class="checklist-header-top">
+      <div class="checklist-icon-box">
+        <i class="bi bi-clipboard2-check-fill"></i>
+      </div>
+
+      <button type="button" class="print-button" (click)="imprimirChecklist()">
+        <i class="bi bi-printer"></i>
+        Imprimir
+      </button>
+    </div>
+
+    <div class="checklist-info-grid">
+      <div class="info-field">
+        <label>Data da Inspeção</label>
+        <input type="date" class="form-control" />
+      </div>
+      <div class="info-field">
+        <label>Local</label>
+        <input type="text" class="form-control" placeholder="Setor Administrativo" />
+      </div>
+      <div class="info-field">
+        <label>Responsável</label>
+        <input type="text" class="form-control" placeholder="Carlos Silva" />
+      </div>
+      <div class="info-field">
+        <label>Setor</label>
+        <input type="text" class="form-control" placeholder="Administrativo" />
+      </div>
+    </div>
+  </div>
+
+  <div class="observacoes-card">
+    <label class="observacoes-label">Observações Gerais</label>
+    <textarea rows="5" class="form-control" placeholder="Digite observações sobre a inspeção..."></textarea>
+  </div>
+
+  <div class="checklist-table-card">
+    <div class="checklist-table-header">
+      <h2>Itens de Verificação</h2>
+    </div>
+    <div class="table-responsive">
+      <table class="checklist-table">
+        <thead>
+          <tr>
+            <th>Item de Verificação</th>
+            <th class="text-center">Sim</th>
+            <th class="text-center">Não</th>
+            <th>Observações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="item-label">
+                <span class="item-icon"><i class="bi bi-person-bounding-box"></i></span>
+                Uso correto de EPI
+              </div>
+            </td>
+            <td class="text-center"><input type="radio" name="epi" /></td>
+            <td class="text-center"><input type="radio" name="epi" /></td>
+            <td><input class="form-control" placeholder="Observações..." /></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="item-label">
+                <span class="item-icon"><i class="bi bi-fire"></i></span>
+                Extintor disponível e válido
+              </div>
+            </td>
+            <td class="text-center"><input type="radio" name="ext1" /></td>
+            <td class="text-center"><input type="radio" name="ext1" /></td>
+            <td><input class="form-control" placeholder="Observações..." /></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="item-label">
+                <span class="item-icon"><i class="bi bi-door-open"></i></span>
+                Saídas de emergência sinalizadas
+              </div>
+            </td>
+            <td class="text-center"><input type="radio" name="saida1" /></td>
+            <td class="text-center"><input type="radio" name="saida1" /></td>
+            <td><input class="form-control" placeholder="Observações..." /></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="item-label">
+                <span class="item-icon"><i class="bi bi-broom"></i></span>
+                Piso limpo e sem obstáculos
+              </div>
+            </td>
+            <td class="text-center"><input type="radio" name="piso1" /></td>
+            <td class="text-center"><input type="radio" name="piso1" /></td>
+            <td><input class="form-control" placeholder="Observações..." /></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="item-label">
+                <span class="item-icon"><i class="bi bi-gear-fill"></i></span>
+                Máquinas com proteção
+              </div>
+            </td>
+            <td class="text-center"><input type="radio" name="maq1" /></td>
+            <td class="text-center"><input type="radio" name="maq1" /></td>
+            <td><input class="form-control" placeholder="Observações..." /></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="item-label">
+                <span class="item-icon"><i class="bi bi-lightbulb-fill"></i></span>
+                Iluminação adequada
+              </div>
+            </td>
+            <td class="text-center"><input type="radio" name="ilu1" /></td>
+            <td class="text-center"><input type="radio" name="ilu1" /></td>
+            <td><input class="form-control" placeholder="Observações..." /></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="checklist-actions">
+    <button class="btn btn-cancel">
+      <i class="bi bi-x-circle"></i>
+      Cancelar
+    </button>
+    <button class="btn btn-save">
+      <i class="bi bi-check-circle"></i>
+      Salvar Checklist
+    </button>
+  </div>
+</div>

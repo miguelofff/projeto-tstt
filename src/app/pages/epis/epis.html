@@ -1,0 +1,782 @@
+<h2>Controle de EPIs</h2>
+
+<div class="content-wrapper">
+  <nav class="internal-nav">
+    <button class="tab-button" [class.active]="abaAtual === 'cadastro'" (click)="selecionarAba('cadastro')">
+      Cadastro de EPIs
+    </button>
+    <button class="tab-button" [class.active]="abaAtual === 'entrega'" (click)="selecionarAba('entrega')">
+      Entrega de EPIs
+    </button>
+    <button class="tab-button" [class.active]="abaAtual === 'historico'" (click)="selecionarAba('historico')">
+      Histórico de Entregas
+    </button>
+    <button class="tab-button" [class.active]="abaAtual === 'validades'" (click)="selecionarAba('validades')">
+      Controle de Validades
+    </button>
+    <button class="tab-button" [class.active]="abaAtual === 'acao'" (click)="selecionarAba('acao')">
+      Plano de Ação
+    </button>
+  </nav>
+
+  @if (abaAtual === 'cadastro') {
+    <div class="page-heading">
+      <div>
+        <h3>Cadastro de EPIs</h3>
+        <p>Gerencie os equipamentos de proteção e acompanhe o estoque disponível.</p>
+      </div>
+    </div>
+
+    @if (feedbackCadastro) {
+      <div
+        class="feedback-message"
+        [class.feedback-success]="tipoFeedbackCadastro === 'success'"
+        [class.feedback-error]="tipoFeedbackCadastro === 'error'"
+        role="status"
+      >
+        {{ tipoFeedbackCadastro === 'success' ? '✓ ' : '' }}{{ feedbackCadastro }}
+      </div>
+    }
+
+    <div class="summary-cards inventory-cards">
+      <article class="summary-card">
+        <span>Total de remessas</span>
+        <strong>{{ episCadastrados.length }}</strong>
+      </article>
+      <article class="summary-card summary-warning">
+        <span>Quantidade em estoque</span>
+        <strong>{{ totalQuantidadeEstoque }}</strong>
+      </article>
+      <article class="summary-card summary-valid">
+        <span>Remessas ativas</span>
+        <strong>{{ totalEpisAtivos }}</strong>
+      </article>
+      <article class="summary-card summary-warning">
+        <span>Remessas em revisão</span>
+        <strong>{{ totalEpisEmRevisao }}</strong>
+      </article>
+      <article class="summary-card summary-danger">
+        <span>Remessas vencidas</span>
+        <strong>{{ totalEpisCadastroVencidos }}</strong>
+      </article>
+    </div>
+
+    <div class="formulario-treinamento">
+      <div class="formulario-header">
+        <h3>{{ epiEditandoId === null ? 'Cadastrar nova remessa' : 'Editar remessa' }}</h3>
+      </div>
+
+      <form (ngSubmit)="salvarEpiCadastro()" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nomeEpi">Nome do EPI</label>
+            <select
+              id="nomeEpi"
+              [(ngModel)]="cadastroForm.nome"
+              (ngModelChange)="selecionarTipoEpi($event)"
+              name="nomeEpi"
+              required
+            >
+              <option value="">Selecione o EPI</option>
+              @for (epi of catalogoEpis; track epi.nome) {
+                <option [value]="epi.nome">{{ epi.nome }}</option>
+              }
+            </select>
+          </div>
+
+          @if (cadastroForm.nome) {
+            <div class="form-group">
+              <label for="categoriaEpi">Categoria</label>
+              <input
+                id="categoriaEpi"
+                type="text"
+                [ngModel]="cadastroForm.categoria"
+                name="categoriaEpi"
+                readonly
+              />
+            </div>
+          }
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dataEntradaEpi">Data de entrada</label>
+            <input
+              id="dataEntradaEpi"
+              type="date"
+              required
+              [(ngModel)]="cadastroForm.dataEntrada"
+              name="dataEntradaEpi"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="quantidadeEpi">Quantidade</label>
+            <input
+              id="quantidadeEpi"
+              type="number"
+              [min]="epiEditandoId === null ? 1 : 0"
+              step="1"
+              required
+              [(ngModel)]="cadastroForm.quantidade"
+              name="quantidadeEpi"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="validadeEpi">Validade</label>
+            <input
+              id="validadeEpi"
+              type="date"
+              [(ngModel)]="cadastroForm.validade"
+              name="validadeEpi"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          @if (cadastroForm.nome) {
+            <div class="form-group">
+              <label for="caEpi">CA / Certificado de Aprovação</label>
+              <input
+                id="caEpi"
+                type="text"
+                [ngModel]="cadastroForm.ca"
+                name="caEpi"
+                readonly
+              />
+            </div>
+          }
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancelar" (click)="limparCadastro()">Cancelar</button>
+          <button type="submit" class="btn-salvar">
+            {{ epiEditandoId === null ? 'Salvar remessa' : 'Atualizar remessa' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    @if (cadastroForm.nome) {
+      <div class="summary-cards inventory-cards">
+        <article class="summary-card summary-valid">
+          <span>Estoque total disponível</span>
+          <strong>{{ estoqueTotalEpiSelecionado }}</strong>
+        </article>
+        <article class="summary-card summary-danger">
+          <span>Unidades vencidas</span>
+          <strong>{{ unidadesVencidasEpiSelecionado }}</strong>
+        </article>
+      </div>
+
+      @if (unidadesVencidasEpiSelecionado > 0) {
+        <div class="alert-panel alert-danger">
+          Existem {{ unidadesVencidasEpiSelecionado }} unidades vencidas deste EPI; elas não estão disponíveis para entrega.
+        </div>
+      }
+
+      <div class="filter-panel">
+        <div class="section-heading">
+          <div>
+            <h3>Remessas cadastradas para {{ cadastroForm.nome }}</h3>
+            <span class="muted-text">{{ episFiltrados.length }} de {{ remessasEpiSelecionado.length }} remessas</span>
+          </div>
+        </div>
+        <div class="filter-controls">
+          <div class="form-group">
+            <label for="filtroStatusEpi">Status</label>
+            <select id="filtroStatusEpi" [(ngModel)]="filtroStatusEpi" name="filtroStatusEpi">
+              <option value="">Todos os status</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Em revisão">Em revisão</option>
+              <option value="Vencido">Vencido</option>
+            </select>
+          </div>
+          <button type="button" class="btn-cancelar clear-filters" (click)="limparFiltrosEpi()">
+            Limpar filtros
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrapper inventory-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Data de entrada</th>
+              <th>Quantidade</th>
+              <th>Validade</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (remessa of episFiltrados; track remessa.id) {
+              <tr>
+                <td>{{ formatarData(remessa.dataEntrada) }}</td>
+                <td>{{ remessa.quantidade }}</td>
+                <td>{{ formatarData(remessa.validade) }}</td>
+                <td>
+                  <span
+                    class="status-badge"
+                    [class.status-valid]="statusCadastroEpi(remessa.validade) === 'Ativo'"
+                    [class.status-warning]="statusCadastroEpi(remessa.validade) === 'Em revisão'"
+                    [class.status-danger]="statusCadastroEpi(remessa.validade) === 'Vencido'"
+                  >
+                    {{ statusCadastroEpi(remessa.validade) }}
+                  </span>
+                </td>
+                <td class="acoes">
+                  <button type="button" class="btn-editar" (click)="editarEpiCadastro(remessa)">Editar</button>
+                  <button type="button" class="btn-excluir" (click)="excluirEpiCadastro(remessa.id)">Excluir</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="empty-history">Nenhuma remessa cadastrada para este EPI.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+
+  @if (abaAtual === 'entrega') {
+    @if (feedbackEntrega) {
+      <div class="feedback-message feedback-error" role="status">
+        {{ feedbackEntrega }}
+      </div>
+    }
+
+    <div class="formulario-treinamento">
+      <div class="formulario-header">
+        <h3>{{ entregaEditandoId === null ? 'Nova Entrega de EPI' : 'Editar Entrega de EPI' }}</h3>
+      </div>
+
+      <form (ngSubmit)="registrarEntrega()" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="funcionario">Funcionário</label>
+            <select id="funcionario" [(ngModel)]="entregaForm.funcionario" name="funcionario">
+              <option value="">Selecione o funcionário</option>
+              @for (funcionario of funcionarios; track funcionario) {
+                <option [value]="funcionario">{{ funcionario }}</option>
+              }
+            </select>
+            @if (errosFormulario['funcionario']) {
+              <small class="error-message">{{ errosFormulario['funcionario'] }}</small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="epi">EPI</label>
+            <select
+              id="epi"
+              [(ngModel)]="entregaForm.epi"
+              (ngModelChange)="selecionarEpiEntrega($event)"
+              name="epi"
+            >
+              <option value="">Selecione o EPI</option>
+              @for (epi of opcoesEpiParaEntrega; track epi.nome) {
+                <option [value]="epi.nome">{{ epi.nome }} — {{ estoqueDisponivelParaEpi(epi.nome) }} disponíveis</option>
+              }
+            </select>
+            @if (errosFormulario['epi']) {
+              <small class="error-message">{{ errosFormulario['epi'] }}</small>
+            }
+            @if (entregaForm.epi) {
+              <small class="muted-text">
+                Disponível:
+                {{ estoqueSelecionadoEntrega ?? 0 }}
+                unidades
+              </small>
+            }
+            @if (unidadesVencidasEpiEntrega > 0) {
+              <small class="error-message">
+                Existem {{ unidadesVencidasEpiEntrega }} unidades vencidas; elas não podem ser entregues.
+              </small>
+            }
+            @if (remessasDisponiveisEntrega.length > 0) {
+              <small class="muted-text">
+                Remessas disponíveis:
+                @for (remessa of remessasDisponiveisEntrega; track remessa.id; let last = $last) {
+                  {{ formatarData(remessa.validade) }} — {{ remessa.quantidade }} unidades{{ last ? '' : '; ' }}
+                }
+              </small>
+            }
+            @if (errosFormulario['estoque']) {
+              <small class="error-message">{{ errosFormulario['estoque'] }}</small>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="quantidade">Quantidade</label>
+            <input
+              id="quantidade"
+              type="number"
+              min="1"
+              step="1"
+              [(ngModel)]="entregaForm.quantidade"
+              name="quantidade"
+            />
+            @if (errosFormulario['quantidade']) {
+              <small class="error-message">{{ errosFormulario['quantidade'] }}</small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="dataEntrega">Data da entrega</label>
+            <input id="dataEntrega" type="date" [(ngModel)]="entregaForm.dataEntrega" name="dataEntrega" />
+            @if (errosFormulario['dataEntrega']) {
+              <small class="error-message">{{ errosFormulario['dataEntrega'] }}</small>
+            }
+          </div>
+
+          @if (entregaForm.epi) {
+            <div class="form-group">
+              <label for="dataValidade">Validade prioritária (FEFO)</label>
+              <input
+                id="dataValidade"
+                type="date"
+                [(ngModel)]="entregaForm.dataValidade"
+                name="dataValidade"
+                readonly
+              />
+            </div>
+          }
+        </div>
+
+        <div class="form-row">
+          <div class="form-group form-group-wide">
+            <label for="ca">CA / Certificado de Aprovação</label>
+            <input
+              id="ca"
+              type="text"
+              [(ngModel)]="entregaForm.ca"
+              name="ca"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="observacoes">Observações</label>
+          <textarea
+            id="observacoes"
+            rows="4"
+            [(ngModel)]="entregaForm.observacoes"
+            name="observacoes"
+            placeholder="Adicione observações sobre a entrega"
+          ></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancelar" (click)="cancelarEntrega()">Cancelar</button>
+          <button type="submit" class="btn-salvar">
+            {{ entregaEditandoId === null ? 'Registrar entrega' : 'Salvar alterações' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Funcionário</th>
+            <th>EPI</th>
+            <th>Quantidade</th>
+            <th>Remessas retiradas</th>
+            <th>Data da entrega</th>
+            <th>Validade</th>
+            <th>CA</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (entrega of entregas; track entrega.id) {
+            <tr>
+              <td>{{ entrega.funcionario }}</td>
+              <td>{{ entrega.epi }}</td>
+              <td>{{ entrega.quantidade }}</td>
+              <td>{{ descricaoAlocacoes(entrega.remessas) }}</td>
+              <td>{{ formatarData(entrega.dataEntrega) }}</td>
+              <td>{{ formatarData(entrega.dataValidade) }}</td>
+              <td>{{ entrega.ca || '—' }}</td>
+              <td>
+                <span
+                  class="status-badge"
+                  [class.status-valid]="entrega.status === 'Válido'"
+                  [class.status-warning]="entrega.status === 'Próximo do vencimento'"
+                  [class.status-danger]="entrega.status === 'Vencido'"
+                >
+                  {{ entrega.status }}
+                </span>
+              </td>
+              <td class="acoes">
+                <button class="btn-ver" (click)="visualizarEntrega(entrega)">Visualizar</button>
+                <button class="btn-editar" (click)="editarEntrega(entrega)">Editar</button>
+                <button class="btn-excluir" (click)="excluirEntrega(entrega.id)">Excluir</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="9" class="empty-history">Nenhuma entrega registrada.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (abaAtual === 'historico') {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Funcionário</th>
+            <th>EPI</th>
+            <th>Ação</th>
+            <th>Detalhes da alteração</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (registro of historicoEntregas; track registro.id) {
+            <tr>
+              <td>{{ formatarDataHoraData(registro.dataHora) }}</td>
+              <td>{{ formatarHora(registro.dataHora) }}</td>
+              <td>{{ registro.funcionario }}</td>
+              <td>{{ registro.epi }}</td>
+              <td>
+                <span
+                  class="history-badge"
+                  [class.history-created]="registro.acao === 'Entrega registrada'"
+                  [class.history-updated]="registro.acao === 'Entrega alterada'"
+                  [class.history-deleted]="registro.acao === 'Entrega excluída'"
+                >
+                  {{ registro.acao }}
+                </span>
+              </td>
+              <td>{{ registro.detalhes }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-history">Ainda não há ações registradas.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (abaAtual === 'validades') {
+    <div class="summary-cards">
+      <article class="summary-card">
+        <span>Total de EPIs entregues</span>
+        <strong>{{ totalValidades }}</strong>
+      </article>
+      <article class="summary-card summary-valid">
+        <span>EPIs válidos</span>
+        <strong>{{ totalEpisValidos }}</strong>
+      </article>
+      <article class="summary-card summary-warning">
+        <span>Próximos do vencimento</span>
+        <strong>{{ totalEpisProximosVencimento }}</strong>
+      </article>
+      <article class="summary-card summary-danger">
+        <span>EPIs vencidos</span>
+        <strong>{{ totalEpisVencidos }}</strong>
+      </article>
+    </div>
+
+    @if (totalEpisVencidos > 0) {
+      <div class="alert-panel alert-danger">
+        <span>⚠ Existem EPIs vencidos que precisam de atenção.</span>
+        <button type="button" class="btn-salvar" (click)="abrirNovaAcaoParaValidades()">
+          Criar plano de ação
+        </button>
+      </div>
+    } @else if (totalEpisProximosVencimento > 0) {
+      <div class="alert-panel alert-warning">
+        <span>⚠ Existem EPIs próximos do vencimento.</span>
+        <button type="button" class="btn-salvar" (click)="abrirNovaAcaoParaValidades()">
+          Criar plano de ação
+        </button>
+      </div>
+    }
+
+    <div class="section-heading">
+      <h3>Controle de Validades</h3>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Funcionário</th>
+            <th>EPI</th>
+            <th>Data da entrega</th>
+            <th>Data de validade</th>
+            <th>Dias restantes</th>
+            <th>Status</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (entrega of entregas; track entrega.id) {
+            <tr>
+              <td>{{ entrega.funcionario }}</td>
+              <td>{{ entrega.epi }}</td>
+              <td>{{ formatarData(entrega.dataEntrega) }}</td>
+              <td>{{ formatarData(entrega.dataValidade) }}</td>
+              <td>{{ textoDiasRestantes(entrega.dataValidade) }}</td>
+              <td>
+                <span
+                  class="status-badge"
+                  [class.status-valid]="statusValidade(entrega.dataValidade) === 'Válido'"
+                  [class.status-warning]="statusValidade(entrega.dataValidade) === 'Próximo do vencimento'"
+                  [class.status-danger]="statusValidade(entrega.dataValidade) === 'Vencido'"
+                >
+                  {{ statusValidade(entrega.dataValidade) }}
+                </span>
+              </td>
+              <td>
+                <button type="button" class="btn-ver" (click)="abrirEntregaNaValidade(entrega)">Ver</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty-history">Nenhuma entrega cadastrada.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (abaAtual === 'acao') {
+    <div class="summary-cards">
+      <article class="summary-card">
+        <span>Total de ações</span>
+        <strong>{{ totalAcoes }}</strong>
+      </article>
+      <article class="summary-card summary-neutral">
+        <span>Pendentes</span>
+        <strong>{{ totalAcoesPendentes }}</strong>
+      </article>
+      <article class="summary-card summary-warning">
+        <span>Em andamento</span>
+        <strong>{{ totalAcoesEmAndamento }}</strong>
+      </article>
+      <article class="summary-card summary-valid">
+        <span>Concluídas</span>
+        <strong>{{ totalAcoesConcluidas }}</strong>
+      </article>
+    </div>
+
+    <div class="section-heading">
+      <h3>Plano de Ação</h3>
+      <button type="button" class="btn-salvar" (click)="abrirFormularioAcao()">+ Nova ação</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Ação</th>
+            <th>Problema</th>
+            <th>Responsável</th>
+            <th>Prazo</th>
+            <th>Prioridade</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (acao of acoesPlano; track acao.id) {
+            <tr>
+              <td>{{ acao.titulo }}</td>
+              <td>{{ acao.problema }}</td>
+              <td>{{ acao.responsavel }}</td>
+              <td>{{ formatarData(acao.prazo) }}</td>
+              <td>
+                <span
+                  class="status-badge"
+                  [class.priority-high]="acao.prioridade === 'Alta'"
+                  [class.priority-critical]="acao.prioridade === 'Crítica'"
+                  [class.priority-neutral]="acao.prioridade === 'Baixa' || acao.prioridade === 'Média'"
+                >
+                  {{ acao.prioridade }}
+                </span>
+              </td>
+              <td>
+                <span
+                  class="status-badge"
+                  [class.status-neutral]="acao.status === 'Pendente'"
+                  [class.status-warning]="acao.status === 'Em andamento'"
+                  [class.status-valid]="acao.status === 'Concluída'"
+                >
+                  {{ acao.status }}
+                </span>
+              </td>
+              <td class="acoes">
+                <button type="button" class="btn-ver" (click)="visualizarAcao(acao)">Visualizar</button>
+                <button type="button" class="btn-editar" (click)="editarAcao(acao)">Editar</button>
+                <button type="button" class="btn-excluir" (click)="excluirAcao(acao.id)">Excluir</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty-history">Nenhuma ação cadastrada.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+@if (epiParaExcluir) {
+  <div class="modal-overlay" (click)="cancelarExclusaoEpi()">
+    <div class="modal-content confirm-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Confirmar exclusão da remessa</h3>
+        <button type="button" class="btn-fechar" (click)="cancelarExclusaoEpi()">×</button>
+      </div>
+      <p>Tem certeza que deseja excluir esta remessa?</p>
+      <p class="delete-item-name">
+        {{ epiParaExcluir.nome }} — validade {{ formatarData(epiParaExcluir.validade) }} — {{ epiParaExcluir.quantidade }} unidades
+      </p>
+      <div class="form-actions">
+        <button type="button" class="btn-cancelar" (click)="cancelarExclusaoEpi()">Cancelar</button>
+        <button type="button" class="btn-excluir" (click)="confirmarExclusaoEpi()">Excluir</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (formularioAcaoAberto) {
+  <div class="modal-overlay" (click)="cancelarFormularioAcao()">
+    <div class="modal-content action-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ acaoEditandoId === null ? 'Nova ação' : 'Editar ação' }}</h3>
+        <button type="button" class="btn-fechar" (click)="cancelarFormularioAcao()">×</button>
+      </div>
+      <form (ngSubmit)="salvarAcao()" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tituloAcao">Título da ação</label>
+            <input id="tituloAcao" type="text" [(ngModel)]="acaoForm.titulo" name="tituloAcao" />
+            @if (errosFormulario['tituloAcao']) {
+              <small class="error-message">{{ errosFormulario['tituloAcao'] }}</small>
+            }
+          </div>
+          <div class="form-group">
+            <label for="responsavelAcao">Responsável</label>
+            <input id="responsavelAcao" type="text" [(ngModel)]="acaoForm.responsavel" name="responsavelAcao" />
+            @if (errosFormulario['responsavelAcao']) {
+              <small class="error-message">{{ errosFormulario['responsavelAcao'] }}</small>
+            }
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="problemaAcao">Problema identificado</label>
+          <textarea id="problemaAcao" rows="3" [(ngModel)]="acaoForm.problema" name="problemaAcao"></textarea>
+          @if (errosFormulario['problemaAcao']) {
+            <small class="error-message">{{ errosFormulario['problemaAcao'] }}</small>
+          }
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dataInicioAcao">Data de início</label>
+            <input id="dataInicioAcao" type="date" [(ngModel)]="acaoForm.dataInicio" name="dataInicioAcao" />
+            @if (errosFormulario['dataInicioAcao']) {
+              <small class="error-message">{{ errosFormulario['dataInicioAcao'] }}</small>
+            }
+          </div>
+          <div class="form-group">
+            <label for="prazoAcao">Prazo</label>
+            <input id="prazoAcao" type="date" [(ngModel)]="acaoForm.prazo" name="prazoAcao" />
+            @if (errosFormulario['prazoAcao']) {
+              <small class="error-message">{{ errosFormulario['prazoAcao'] }}</small>
+            }
+          </div>
+          <div class="form-group">
+            <label for="prioridadeAcao">Prioridade</label>
+            <select id="prioridadeAcao" [(ngModel)]="acaoForm.prioridade" name="prioridadeAcao">
+              <option value="Baixa">Baixa</option>
+              <option value="Média">Média</option>
+              <option value="Alta">Alta</option>
+              <option value="Crítica">Crítica</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="statusAcao">Status</label>
+            <select id="statusAcao" [(ngModel)]="acaoForm.status" name="statusAcao">
+              <option value="Pendente">Pendente</option>
+              <option value="Em andamento">Em andamento</option>
+              <option value="Concluída">Concluída</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="observacoesAcao">Observações</label>
+          <textarea id="observacoesAcao" rows="3" [(ngModel)]="acaoForm.observacoes" name="observacoesAcao"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-cancelar" (click)="cancelarFormularioAcao()">Cancelar</button>
+          <button type="submit" class="btn-salvar">Salvar ação</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (acaoVisualizada) {
+  <div class="modal-overlay" (click)="fecharVisualizacaoAcao()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ acaoVisualizada.titulo }}</h3>
+        <button type="button" class="btn-fechar" (click)="fecharVisualizacaoAcao()">×</button>
+      </div>
+      <div class="modal-grid">
+        <div><strong>Problema:</strong> {{ acaoVisualizada.problema }}</div>
+        <div><strong>Responsável:</strong> {{ acaoVisualizada.responsavel }}</div>
+        <div><strong>Data de início:</strong> {{ formatarData(acaoVisualizada.dataInicio) }}</div>
+        <div><strong>Prazo:</strong> {{ formatarData(acaoVisualizada.prazo) }}</div>
+        <div><strong>Prioridade:</strong> {{ acaoVisualizada.prioridade }}</div>
+        <div><strong>Status:</strong> {{ acaoVisualizada.status }}</div>
+        <div><strong>Observações:</strong> {{ acaoVisualizada.observacoes || 'Sem observações.' }}</div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (entregaVisualizada) {
+  <div class="modal-overlay" (click)="fecharVisualizacao()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Detalhes da entrega</h3>
+        <button type="button" class="btn-fechar" (click)="fecharVisualizacao()">×</button>
+      </div>
+
+      <div class="modal-grid">
+        <div><strong>Funcionário:</strong> {{ entregaVisualizada.funcionario }}</div>
+        <div><strong>EPI:</strong> {{ entregaVisualizada.epi }}</div>
+        <div><strong>Quantidade:</strong> {{ entregaVisualizada.quantidade }}</div>
+        <div><strong>Data da entrega:</strong> {{ formatarData(entregaVisualizada.dataEntrega) }}</div>
+        <div><strong>Validade prioritária:</strong> {{ formatarData(entregaVisualizada.dataValidade) }}</div>
+        <div><strong>Lotes retirados:</strong> {{ descricaoAlocacoes(entregaVisualizada.remessas) }}</div>
+        <div><strong>CA:</strong> {{ entregaVisualizada.ca || '—' }}</div>
+        <div><strong>Status:</strong> {{ entregaVisualizada.status }}</div>
+        <div><strong>Observações:</strong> {{ entregaVisualizada.observacoes || 'Sem observações.' }}</div>
+      </div>
+    </div>
+  </div>
+}
